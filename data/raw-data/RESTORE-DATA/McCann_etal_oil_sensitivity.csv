@@ -1,0 +1,55 @@
+group,code,oil_sensitivity_score,references
+Phytoplankton,Phyto,1,Bender et al. 1977;  Gilde and Pinckney 2012
+Micro-phytobenthos,Phytbenth,1,Carman et al. 1997; Bennet et al. 1999; Carman et al. 2000; Fleeger et al. 2015
+SAV,SAV,1,Martin 2015
+"Plants, Distichlis spicata",Distichlis,2,Mendelssohn et al. 1990
+"Plants, Juncus roemerianus",Juncus,2,"Lin and Mendelssohn 2009, Lin and Mendelssohn 2012"
+"Plants, other marsh plants",Other plants,2,Judy et al. 2014
+"Plants, Spartina alterniflora",S.alter,2,Lin and Mendelssohn 1996; Lin et al. 2002; DeLaune et al. 2003; Lin and Mendelssohn 2012
+"Plants, Spartina patens",S.patens,2,Mendelssohn et al. 1990; Lin and Mendelssohn 1996; DeLaune et al. 2003; Lin and Mendelssohn 2008
+Meiobenthos,Meiobenth.,2,Carman et al. 2000; Fleeger et al. 2015
+Macroalgae,Macroalg,NA,NA
+"Fish, marsh, carnivorous",Marsh carn. fish,0,Rozas et al. 2000; Roth and Baltz 2009; Moody et al. 2013; Able et al. 2015
+"Fish, marsh, detritivorous",Marsh detr. fish,0,Rozas et al. 2000; Roth and Baltz 2009; Moody et al. 2013; Able et al. 2015
+"Fish, marsh, herbivorous",Marsh herb. fish,0,Rozas et al. 2000; Roth and Baltz 2009; Moody et al. 2013; Able et al. 2015
+"Fish, marsh, omnivorous",Marsh omn. fish,0,Rozas et al. 2000; Roth and Baltz 2009; Moody et al. 2013; Able et al. 2015
+"Fish, marsh, zooplanktivorous",Marsh zoop. fish,0,Rozas et al. 2000; Roth and Baltz 2009; Moody et al. 2013; Able et al. 2015
+"Birds, clapper rail",Clapper rail,1,DHNRDAT 2016
+"Birds, gulls & terns ",Gulls & terns,2,Haney et al. 2014
+"Birds, sparrow",Sparrow,2,Bergeon Burns et al. 2014
+"Birds, wading",Wading birds,2,DHNRDAT 2016
+"Mammals, bottlenose dolphin",Dolphins,2,Schwacke et al. 2014; Lane et al. 2015
+"Birds, other marsh birds",Other birds,NA,NA
+"Mammals, carnivorous/omnivorous","Coyote, Raccoon",NA,NA
+"Mammals, herbivorous",Nutria,NA,NA
+"Mammals, rat",Rat,NA,NA
+Reptiles,Reptiles,NA,NA
+"Insects, carnivorous",Carn. insects,1,McCall and Pennings  2012
+"Insects, detritivorous",Detr. insects,1,McCall and Pennings  2012
+"Insects, herbivorous",Herb. insects,1,McCall and Pennings  2012
+"Insects, parasitoid wasps",Para. insects,1,McCall and Pennings  2012
+Spiders,Spiders,1,McCall and Pennings  2012
+"Insects, aquatic",Aq. insects,NA,NA
+"Insects, omnivorous",Omn. insects,NA,NA
+"Zooplankton, gelatinous",Gel. zoop,NA,NA
+Zooplankton,Zoop,0,Carassou et al. 2014
+Bacteria,Bact,NA,NA
+Detritus,Detr,NA,NA
+Protozoa,Protoz,NA,NA
+"Fish, benthivorous",Benth. fish,0,Rozas et al. 2000; Roth and Baltz 2009; Fodrie and Heck 2011
+"Fish, carnivorous",Carn. fish,0,Fodrie and Heck 2011
+"Fish, invertivorous",Invert. fish,0,Fodrie and Heck 2011
+"Fish, pelagic, omnivorous",Pelg. omn. fish,0,Rozas et al. 2000; Roth and Baltz 2009
+"Fish, zooplanktivorous",Zoop. fish,0,Rozas et al. 2000; Roth and Baltz 2009; Fodrie and Heck 2011
+"Fish, piscivorous",Pisc. fish,0,Roth and Baltz 2009; Fodrie and Heck 2011
+"Crabs, hermit",Herm. crabs,0,Roth and Baltz 2009; Silliman et al. 2012
+"Bivalve, suspension-feeding",Bivalves,1,Soniat et al. 2011; Fry and Anderson 2014; DHNRDAT 2016
+"Crabs, blue",Blue crabs,1,Moody et al. 2013; Grey et al. 2015
+"Crabs, fiddler",Fidl. crabs,1,Lee et al. 1981; McCall & Pennings 2012; DHNRDAT 2016; Zengel et al. 2016b
+Polychaetes,Polych,1,Rozas et al. 2000
+"Shrimp, penaid",Penaeid shrimp,1,Roth and Baltz 2009; Moody et al. 2013; Rozas et al. 2014; van der Ham and de Mutsert 2014; DHNRDAT 2016
+"Isopods, amphipods & taenids",Iso. Amphi.,2,Gulec et al. 1997; Rozas et al. 2000
+"Shrimp, grass",Grass shrimp,2,Rozas et al. 2000; Moody et al. 2013
+"Snails, omnivorous",Omn. snail,2,Silliman et al. 2012; Zengel et al. 2016a
+"Crabs, marsh",Marsh crabs,NA,NA
+"Snails, detritivorous",Detr. snail,NA,NA

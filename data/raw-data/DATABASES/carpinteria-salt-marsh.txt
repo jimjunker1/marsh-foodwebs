@@ -1,0 +1,21 @@
+This symmetrical web of Carpinteria Salt Marsh is comprised of 4 subwebs denoted by solid lines (clockwise: predator-prey, parasite-host, predator-parasite, parasite-parasite).  Consumers in columns, prey/hosts in rows.  Numerical entries represent links.  Different values represent different types of links.
+N  = a confirmed link
+N.1 represents a proposed/presumed link
+
+0 = no link
+1 = first intermediate host
+1.2 = first and second intermediate host
+1.25 first and second intermediate host, excysts outside 2nd intermediat host.
+2 = second intermediate host
+2.5 = second intermediate host external (non-trophic) cyst
+3 = final host
+4 = predator-prey
+4.11 = 4.1
+4.2 = egg predator
+5 = predation on free-living cercarial stage of a trematode
+6 = micropredation (mosquito)
+7 = predation on parasite in a host
+8 = predation on parasite in a host, transmission to predator possible
+9 = parasite - parasite (mostly intraguild predation)
+
+Citation: Lafferty, K. D., R. F. Hechinger, J. C. Shaw, K. L. Whitney and A. M. Kuris (in press) Food webs and parasites in a salt marsh ecosystem. In Disease ecology: community structure and pathogen dynamics (eds S. Collinge and C. Ray). Oxford University Press, Oxford.
