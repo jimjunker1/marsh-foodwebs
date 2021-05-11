@@ -6,7 +6,8 @@
 
 rename_fatty_acids <- function() {
 
-  alt_names = list(c(),)
+  alt_names = list(c(),
+                   c())
   
   good_names = list()
   

@@ -224,8 +224,17 @@ clean_foodwebs <- function(data_list) {
                     prey_filled = ifelse(is.na(prey_specific), ifelse(is.na(prey_generic), prey_group, prey_generic), prey_specific)) %>%
        select(predator_filled, prey_filled) %>%
       dplyr::mutate(pres = 1) %>% 
-      square_matrix
-
+      square_matrix %>% as.matrix
+    
+    trophic_sort = full_matrix %>% apply(.,2, sum) %>% sort
+    
+    full_matrix = full_matrix[rownames(full_matrix) %in% names(trophic_sort), colnames(full_matrix) %in% names(trophic_sort)]
+ 
+    # full web connectance
+    connectance = sum(full_matrix)/((length(full_matrix)*(length(full_matrix)-1))/2)
+    #0.4
+    
+    Plot.matrix2(full_matrix)
     # clean GoMexSI species interaction database
     # this data was downloaded manually via genera names from McCann data
     # In the future, automate this to update based on species lists
