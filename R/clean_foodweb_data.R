@@ -52,24 +52,25 @@ clean_foodwebs <- function(data_list) {
                   "Pagurus pollicaris",
                   "Armases cinereum / Sesarma cinereum",
                   "Panopeus herbstii",
-                  '“Detritus”',
-                  '“Sediment”',
                   "Fundulus xenica or Adinia xenica",
                   "Scentless plant bugs (true bugs)",
                   '"Algal mats"',
-                  '“Filamentous algae”',
-                  "Studies that reported “algae” in diet",
+                  '"Filamentous algae"',
+                  'Studies that reported "algae" in diet',
                   "Ulva",
                   '“Meiofauna”',
                   "Harpacticoid copepods",
                   "Nematodes",
                   "Ostracods",
-                  '“Benthic diatoms”',
-                  '“Epiphytes”',
-                  '“Microalgae”',
+                  '"Benthic diatoms"',
+                  '"Epiphytes"',
+                  '"Microalgae"',
+                  '"Detritus"',
+                  '"Meiofauna"',
+                  '"Sediment"',
                   "Distichlis spicata",
                   "Juncus roemerianus",
-                  "“plants” and any plant wetland plant species specified e.g., Iva frutescens",
+                  '"plants" and any plant wetland plant species specified e.g., Iva frutescens',
                   "Spartina alterniflora",
                   "Spartina patens",
                   "Capitellids",
@@ -99,7 +100,21 @@ clean_foodwebs <- function(data_list) {
                   "Web-weaver spider (Grammonota trivitatta)",
                   "Web-weaver spider (Linyphiid spiders)",
                   "Wolf spider (Lycosid spiders)",
-                  "Wolf spider (Pirata marxii)")
+                  "Wolf spider (Pirata marxii)",
+                  "Chironomid larvae", 
+                  "Thrips",
+                  "Ischnodemus sp.",
+                  "Moths",
+                  "Other Spiders",
+                  "Tanaids",
+                  "Isopods",
+                  "Weevil",
+                  "Moth (Doryodes grandipennis)",
+                  "Immature leafhoppers",
+                  "Ants",
+                  "Other Planthoppers",
+                  "Orb-weaver spider (Hypsosinga variabilis)",
+                  "Cape Sable Seaside Sparrows (Ammonidrimus maritimus mirabilis)")
     
     good_names = list("Wedge clam (Rangia cuneata)",
                       "Thin strip hermit crab (Clibanarius vittatus)",
@@ -107,10 +122,8 @@ clean_foodwebs <- function(data_list) {
                       "Gray hermit crab (Pagurus pollicaris)",
                       "Wharf crab (Armases cinereum)",
                       "Black fingered mud crab (Panopeus herbstii)",
-                      "Detritus",
-                      "Sediment",
                       "Diamond killifish (Adinia xenica)",
-                      "Scentless plant true bugs",
+                      "Scentless plant true bugs (Rhopalidae)",
                       "Algal mats",
                       "Filamentous algae",
                       "Algae",
@@ -122,6 +135,9 @@ clean_foodwebs <- function(data_list) {
                       "Benthic diatoms",
                       "Epiphytes",
                       "Microalgae",
+                      "Detritus",
+                      "Meiofauna",
+                      "Sediment",
                       "Seashore saltgrass (Distichlis spicata)",
                       "Black rush (Juncus roemerianus)",
                       "General plants",
@@ -129,7 +145,7 @@ clean_foodwebs <- function(data_list) {
                       "Salt hay (Spartina patens)",
                       "Capitellids (Capitellidae)",
                       "Nereids (Nereididae)",
-                      "White shrimp (Penaues setiferus / Litopenaeus setiferus)",
+                      "White shrimp (Litopenaeus setiferus)",
                       "Marsh periwinkle (Littoraria irrorata)",
                       "Jumping spider (Salticidae)",
                       "Sac spider (Clubionidae)",
@@ -154,92 +170,53 @@ clean_foodwebs <- function(data_list) {
                       "Web-weaver spider (Grammonota trivittata)",
                       "Web-weaver spider (Linyphiidae)",
                       "Wolf spider (Lycosidae)",
-                      "Wolf spider (Pirata sp.)")
+                      "Wolf spider (Pirata sp.)",
+                      "Chironomid larvae (Chironomidae)",
+                      "Thrips (Thysanoptera)",
+                      "Chinch bug (Ischnodemus sp.)",
+                      "Moths (Lepidoptera)",
+                      "Other Spiders (Araneae)",
+                      "Tanaids (Tanaidacea)",
+                      "Isopods (Isopoda)",
+                      "Weevil (Curculionoidea)",
+                      "Dull Doryodes Moth (Doryodes grandipennis)",
+                      'Leafhopper (Cicadellidae) "immature"',
+                      "Ant (Formicidae)",
+                      "Planthopper (Fulgoromorpha)",
+                      "Orb-weaver spider (Hypsosinga pygmaea)",
+                      "Cape Sable Seaside Sparrows (Ammodramus maritimus mirabilis)")
     
     keyval = setNames(good_names, nm = unlist(bad_names))
     
     spp_nodes <- mccann_data[[3]][[1]] %>%
+      # replace the damn curly quotes
+      dplyr::mutate(taxa_or_description = textclean::replace_curly_quote(taxa_or_description)) %>%
       #rename taxa_or_description based on above keyvalue to ease below
       dplyr::mutate(taxa_or_description = recode(taxa_or_description, !!!keyval)) %>%
       # split taxa_or_description into generic and scientific
       dplyr::mutate(generic = case_when(grepl('(\\(.*(\\"|\\“.*)$)', taxa_or_description) ~ gsub('(.*[^(])\\(.*$', "\\1", taxa_or_description),#gsub('.*"(.*)".*', "\\1", taxa_or_description),#
                                         grepl("(\\()",taxa_or_description) ~ gsub("\\([^()]*\\)", "", taxa_or_description) %>% stringr::str_remove_all("\\s\\("),#stringr::str_extract_all(taxa_or_description, "^(.*?\\s\\()") %>% stringr::str_remove_all("\\s\\("),
-                                        grepl('(\\“)', taxa_or_description) ~ gsub('“|”', "", taxa_or_description),
+                                        grepl('(\\")', taxa_or_description) ~ gsub('"|"', "", taxa_or_description),
                                         TRUE ~ taxa_or_description)) %>%
                                         # TRUE ~ NA_character_)) %>%#, c("generic","spp_name"), sep= "(", remove = FALSE) #%>%
       #clean spp_name
       dplyr::mutate(specific_name = case_when(grepl("(\\()", taxa_or_description) ~ gsub("\\(([^()]*)\\)|.", "\\1", taxa_or_description, perl=T),
                                          !grepl('(\\(|\\")', taxa_or_description) ~ NA_character_)) %>% #,
                                          # TRUE ~ NA_character_)) %>%
-      dplyr::mutate(lifestage = case_when(grepl('\\"', taxa_or_description) ~ gsub('\\"([^()]*)\\"|.', "\\1", taxa_or_description, perl=T),
+      dplyr::mutate(lifestage = case_when(grepl('^.{2,}\\"|^.{2,}\\“', taxa_or_description) ~ gsub('\\"([^()]*)\\"|.', "\\1", taxa_or_description, perl=T),
                                           TRUE ~ NA_character_))
   
     saveRDS(spp_nodes, "./data/derived-data/mccann_spp_taxonomy.rds")
 } else{spp_nodes = readRDS(file = "./data/derived-data/mccann_spp_taxonomy.rds")}
     
-    # create long df of consumer-resource interactions from agg_matrix and expand.grid based on spp_nodes
+   
+   mccann_spp_list = spp_nodes %>% select(contains("specific")) %>% unlist %>%na.omit %>% unique
     
-
-    
-    mccann_expanded_feeding_links = agg_matrix %>% data.frame %>% 
-      rownames_to_column('prey_group') %>% 
-      pivot_longer(-prey_group, names_to = "predator_group", values_to = "pres") %>%
-      dplyr::filter(pres == 1) %>%
-      dplyr::mutate(merge_group = make.names(predator_group)) %>%
-      full_join(spp_nodes %>% dplyr::mutate(merge_group = make.names(group)) %>%
-                  select(merge_group, group, code, generic, specific_name, lifestage), by = "merge_group") %>%
-      dplyr::mutate(interaction = 'eats') %>% select(-merge_group) %>% dplyr::filter(!is.na(group)) %>%
-      dplyr::mutate(merge_group = make.names(prey_group)) %>%
-      full_join(spp_nodes %>% dplyr::mutate(merge_group = make.names(group)) %>%
-                  select(merge_group, code, generic, specific_name, lifestage), by = "merge_group") %>%
-      select(predator_group = "group", predator_code = "code.x", predator_generic = "generic.x",
-             predator_specific = "specific_name.x", predator_lifestage = "lifestage.x", `interaction`,
-             prey_group = "merge_group", prey_code = "code.y", prey_generic = "generic.y", prey_specific = "specific_name.y",
-             prey_lifestage = "lifestage.y") %>%
-      dplyr::filter(!is.na(predator_group) & prey_group != "NA.")
-    
-    
-    square_matrix = function(x,...){
-      if(dim(x)[2] == 2){
-        x$pres = 1
-      } else{
-        x = x[,1:3]
-      }
-      col_names = unlist(unique(x[,1]));col_name = as.character(names(x)[1])
-      row_names = unlist(unique(x[,2]));row_name = as.character(names(x)[2])
-      full_names = unique(c(col_names, row_names))
-      full_mat = expand.grid(col_name = full_names, row_name = full_names) %>%
-        setNames(., nm = c(col_name, row_name))
-      pres_matrix = full_join(full_mat, x,  by = c('predator_filled', 'prey_filled'),
-                               keep = FALSE) %>% distinct(.keep_all = TRUE) %>%
-        pivot_wider(names_from = 'predator_filled', values_from = 'pres') %>%
-        column_to_rownames('prey_filled')
-      pres_matrix[is.na(pres_matrix)] <- 0 
-      pres_matrix
-    }
-    
-    debugonce(square_matrix)
-    full_matrix = mccann_expanded_feeding_links %>%
-      dplyr::mutate(predator_filled = ifelse(is.na(predator_specific), predator_generic, predator_specific),
-                    prey_filled = ifelse(is.na(prey_specific), ifelse(is.na(prey_generic), prey_group, prey_generic), prey_specific)) %>%
-       select(predator_filled, prey_filled) %>%
-      dplyr::mutate(pres = 1) %>% 
-      square_matrix %>% as.matrix
-    
-    trophic_sort = full_matrix %>% apply(.,2, sum) %>% sort
-    
-    full_matrix = full_matrix[rownames(full_matrix) %in% names(trophic_sort), colnames(full_matrix) %in% names(trophic_sort)]
- 
-    # full web connectance
-    connectance = sum(full_matrix)/((length(full_matrix)*(length(full_matrix)-1))/2)
-    #0.4
-    
-    Plot.matrix2(full_matrix)
     # clean GoMexSI species interaction database
     # this data was downloaded manually via genera names from McCann data
     # In the future, automate this to update based on species lists
     # and from rglobi to extract 
-    
+    if(!file.exists("./data/derived-data/foodwebs/GoMexSI_df.rds")){
     GoMexSI_files = list.files("./data/raw-data/DATABASES/GoMexSI/", pattern = ".csv", full.names = TRUE)
     GoMexSI_list = lapply(GoMexSI_files, read.csv)
     GoMexSI_df = map(GoMexSI_list, ~.x %>%
@@ -249,11 +226,14 @@ clean_foodwebs <- function(data_list) {
       bind_rows
     
     saveRDS(GoMexSI_df, file = "./data/derived-data/foodwebs/GoMexSI_df.rds")
+    } else{GoMexSI_df = readRDS(file = "./data/derived-data/foodwebs/GoMexSI_df.rds")}
+    
+    GoMexSI_spp_list = GoMexSI_df %>% select(matches('taxon_name')) %>% flatten %>% unlist %>% trimws %>% unique
     
     # get full spp list
-    spp_list = GoMexSI_df %>% select(matches('taxon_name')) %>% flatten %>% unlist %>% unique
     
+    spp_list = c(mccann_spp_list, GoMexSI_spp_list) %>% unique
 
-    return(list(agg_matrix= agg_matrix, feeding_links = feeding_links, spp_nodes = spp_nodes, spp_list = spp_list ))
+    return(list(agg_matrix= agg_matrix, feeding_links = feeding_links, spp_nodes = spp_nodes, spp_list = spp_list))
 
 }

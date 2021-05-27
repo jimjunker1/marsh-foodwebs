@@ -72,7 +72,7 @@ df_traits$FullName <- paste (df_traits$gen_name, df_traits$spe_name)
 # summary(as.factor(df_traits$FullName), maxsum = 10000) # Displays a list of species for which functional trait datasets are already available in TOFF
 # unique (as.factor(df_traits$FullName))  # Displays the number of species for which functional trait datasets are already available in TOFF
 # unique (as.factor(df_traits$pub_name)) # Displays the number of publications used to obtain currently available functional trait datasets in TOFF
-write.csv(df_traits, file = paste0(folder_path,"TOFF",Sys.Date(), "_df_traits.csv"), row.names = FALSE)# Export dataframe as a csv file 
+write.csv(df_traits, file = paste0(folder_path,"TOFF_",Sys.Date(), "_df_traits.csv"), row.names = FALSE)# Export dataframe as a csv file 
 
 
 ###########################################################################################################################################################
@@ -96,14 +96,14 @@ FROM
 # Extracting and exporting environmental feature dataframe
 df_metadata <- dbGetQuery (connection_db, query_metadata)
 dt_metadata= df_metadata %>% group_by(mea_id, met_id) %>% pivot_wider(names_from = "char_name", values_from ='mch_value')
-write.csv(dt_metadata, file = paste0(folder_path,"TOFF",Sys.Date(), "_dt_metadata.csv"), row.names = FALSE)# Export dataframe as a csv file  
+write.csv(dt_metadata, file = paste0(folder_path,"TOFF_",Sys.Date(), "_dt_metadata.csv"), row.names = FALSE)# Export dataframe as a csv file  
 
 ###########################################################################################################################################################
 #### 4. Merging Functional trait dataset Environmental features into one dataframe (Facultative)
 ############################################################################################################################################################ The two previous parts of the script return functional trait dataset and environmental dataset as two distinct files. Having trait values and their associated environmental measures in the same file can be useful. This fourth part of the script allows merging the two datasets into one file.
 
 df_traitsandmetadata <- merge(dt_metadata,df_traits, all.x = TRUE, all.y = TRUE)# Merge dataframes into one
-write.csv(df_traitsandmetadata, file = paste0(folder_path,"TOFF",Sys.Date(), "_df_merged_metadata_traits.csv"), row.names = FALSE)# Export dataframe 
+write.csv(df_traitsandmetadata, file = paste0(folder_path,"TOFF_",Sys.Date(), "_df_merged_metadata_traits.csv"), row.names = FALSE)# Export dataframe 
 
 ###########################################################################################################################################################
 #### 5. TOFF disconnection

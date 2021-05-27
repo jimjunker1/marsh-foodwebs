@@ -13,6 +13,7 @@ library(taxize)
 library(rfishbase)
 library(igraph)
 library(vegan)
+library(textclean)
 
 remotes::install_github("ropensci/rmangal")
 remotes::install_github("FMestre1/fw_package")
@@ -21,12 +22,13 @@ remotes::install_github("FMestre1/fw_package")
 # monitor raw-data folder for changes
 data_files = length(list.files("./data/raw-data/", "*.*"))
 source("./R/foodweb_functions.R")
-# if(!all(file.exists(c("./data/raw-data/DATABASES/TOFF/TOFF_2021-05-05_df_traits.csv",
-#                   "./data/raw-data/DATABASES/TOFF/TOFF_2021-05-05_dt_metadata.csv",
-#                   "./data/raw-data/DATABASES/TOFF/TOFF_2021-05-05_df_merged_metadata_traits.csv")))){
-#   source("./R/R-Script_TOFF_Data_Release_2021.R")
-#   TOFF_import()
-# }
+if(!all(grepl(".*_df_traits|.*_dt_metadata.csv|.*_df_merged_metadata_traits.csv", 
+              list.files("./data/raw-data/DATABASES/TOFF/")))){
+  
+  source("./R/R-Script_TOFF_Data_Release_2021.R")
+  TOFF_import()
+  
+}
 
 read_excel_allsheets <- function(filename, tibble = TRUE) {
   if(grepl(".csv", filename)){

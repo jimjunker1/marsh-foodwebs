@@ -9,10 +9,18 @@ fill_taxonomy <- function(spp_list = foodweb_data[["spp_list"]]) {
 
   '%ni%' = Negate('%in%')
   #!++++   End Helper functions    ++++!
-  
-  new_spp_files = list.files(path = "./data/raw-data/", pattern = "*spp_list.rds", full.names = TRUE)
+  spp_taxonomy_list = readRDS(file = "./data/derived-data/spp_taxonomy_list.rds")
   na_list = readRDS(file = "./data/derived-data/bad_names.rds")
   
+  new_spp_names = spp_list[spp_list %ni% names(spp_taxonomy_list) & spp_list %ni% na_list]
+  
+  new_spp_search = taxize::classification(new_spp_names, db = 'itis')
+  
+  nas = new_spp_search[is.na(new_spp_search)]
+  short_tax = 
+  new_spp = new_spp_list[!is.na(new_spp_list)]
+  
+  spp_taxonomy_list = rlist::list.merge()
   if(file.exist(path = "./data/derived-data/spp_taxonomy_list.rds") && length(new_spp_files) == 0){
     cat("Species list up to date. The list of groups with NAs are:",na_list)
   } else{
