@@ -1,4 +1,6 @@
+here::i_am("packages.R")
 ## library() calls go here
+library(here)
 library(dotenv)
 library(drake)
 library(XML)
@@ -20,12 +22,14 @@ remotes::install_github("FMestre1/fw_package")
 
 '%ni%' <- Negate('%in%')
 # monitor raw-data folder for changes
-data_files = length(list.files("./data/raw-data/", "*.*"))
 source("./R/foodweb_functions.R")
+source("./R/import_data.R")
+import_data()
 if(!all(grepl(".*_df_traits|.*_dt_metadata.csv|.*_df_merged_metadata_traits.csv", 
               list.files("./data/raw-data/DATABASES/TOFF/")))){
   
   source("./R/R-Script_TOFF_Data_Release_2021.R")
+  message("TOFF database updated.")
   TOFF_import()
   
 }
@@ -45,3 +49,4 @@ read_excel_allsheets <- function(filename, tibble = TRUE) {
   }
   x
 }
+

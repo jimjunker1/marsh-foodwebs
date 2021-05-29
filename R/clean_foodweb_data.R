@@ -4,7 +4,7 @@
 ##'
 ##' @title
 ##' @param data_list
-clean_foodwebs <- function(data_list) {
+clean_foodweb_data <- function(data_list) {
   
   #!++++    HELPER FUNCTIONS    ++++!#
   read_excel_allsheets <- function(filename, tibble = TRUE) {
@@ -113,8 +113,8 @@ clean_foodwebs <- function(data_list) {
                   "Immature leafhoppers",
                   "Ants",
                   "Other Planthoppers",
-                  "Orb-weaver spider (Hypsosinga variabilis)",
-                  "Cape Sable Seaside Sparrows (Ammonidrimus maritimus mirabilis)")
+                  "Cape Sable Seaside Sparrows (Ammonidrimus maritimus mirabilis)",
+                  "Ant (Crematogaster clara)")
     
     good_names = list("Wedge clam (Rangia cuneata)",
                       "Thin strip hermit crab (Clibanarius vittatus)",
@@ -166,7 +166,7 @@ clean_foodwebs <- function(data_list) {
                       "Marsh Rice Rat (Oryzomys palustris)",
                       "Grass shrimp (Palaemonetes antennarius)",
                       "White shrimp (Penaeus setiferus / Litopenaeus setiferus)",
-                      "Orb-weaver spider (Hypsosinga variabilis)",
+                      "Orb-weaver spider (Hypsosinga pygmaea)",
                       "Web-weaver spider (Grammonota trivittata)",
                       "Web-weaver spider (Linyphiidae)",
                       "Wolf spider (Lycosidae)",
@@ -183,8 +183,8 @@ clean_foodwebs <- function(data_list) {
                       'Leafhopper (Cicadellidae) "immature"',
                       "Ant (Formicidae)",
                       "Planthopper (Fulgoromorpha)",
-                      "Orb-weaver spider (Hypsosinga pygmaea)",
-                      "Cape Sable Seaside Sparrows (Ammodramus maritimus mirabilis)")
+                      "Cape Sable Seaside Sparrows (Ammodramus maritimus mirabilis)",
+                      "Ant (Crematogaster laeviuscula)")
     
     keyval = setNames(good_names, nm = unlist(bad_names))
     
@@ -231,7 +231,6 @@ clean_foodwebs <- function(data_list) {
     GoMexSI_spp_list = GoMexSI_df %>% select(matches('taxon_name')) %>% flatten %>% unlist %>% trimws %>% unique
     
     # get full spp list
-    
     spp_list = c(mccann_spp_list, GoMexSI_spp_list) %>% unique
 
     return(list(agg_matrix= agg_matrix, feeding_links = feeding_links, spp_nodes = spp_nodes, spp_list = spp_list))

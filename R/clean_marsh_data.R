@@ -4,7 +4,7 @@
 ##'
 ##' @title
 ##' @param data_list
-clean_marsh_data <- function(data_list, trait_df) {
+clean_marsh_data <- function(data_list, trait_df,interaction_list) {
 
   #!++++    HELPER FUNCTIONS    ++++!#
   
@@ -23,6 +23,37 @@ clean_marsh_data <- function(data_list, trait_df) {
   
   #!++++   END HELPER FUNCTION    ++++!#
   
+  
+  #### COMPOSITION DATA ####
+  
+  community_objects = data_list[grepl("comp.*|abun.*",unlist(names(data_list)), ignore.case = TRUE)]
+  
+  spp_abundance = community_objects %>% flatten %>% .[grepl("abundance", names(.), ignore.case = TRUE)] %>% flatten_df 
+  
+  bad_names = spp_abundance$species[spp_abundance$species %ni% names(spp_taxonomy_list)]
+  
+  valid_spp_abundance = 
+  
+  pond_abundance = spp_abundance %>%
+    dplyr::filter(grepl("pond", Location) & !grepl('na',`Common Name`))
+  
+  pond_foodweb = pond_abundance %>% select(species) %>% 
+    left_join(interaction_list %>% dplyr::rename(species = 'predator_filled')) %>% unique
+    left_join(interaction_list %>% dplyr::rename(species = 'prey_filled'))
+    
+  
+  spp_length.mass = community_objects %>% flatten %>% .[grepl("lengths", names(.), ignore.case = TRUE)] %>% flatten_df %>%
+    # convert columns to numeric where appropriate
+    dplyr::mutate(across(matches(')'), as.numeric))
+  
+  
+  
+  spp_length.mass %>%
+    dplyr::filter(Species == "Anchoa mitchilli") #%>%
+  ggplot(aes(x = 'TL (mm)'))+
+    geom_density() +
+    theme_minimal()
+  
   #### TRACER DATA ####
   foodweb_objects = data_list[grepl("food*",unlist(names(data_list)), ignore.case = TRUE)]
   
@@ -40,6 +71,9 @@ clean_marsh_data <- function(data_list, trait_df) {
     remove_list[i] = any(dim(isotope_objects_list[[i]]) != 0)
   }
   isotope_objects = isotope_objects_list[remove_list]
+  
+  
+  
   
   FA_objects_list = data_list[grepl("(FA).*", unlist(names(data_list)), ignore.case = TRUE)] %>%
     flatten
@@ -111,24 +145,6 @@ clean_marsh_data <- function(data_list, trait_df) {
   
   saveRDS(tracer_df, file = "./data/derived-data/tracers/tracers_full.rds")
 
-  #### COMPOSITION DATA ####
-
-  community_objects = data_list[grepl("comp.*|abun.*",unlist(names(data_list)), ignore.case = TRUE)]
-  
-  spp_abundance = community_objects %>% flatten %>% .[grepl("abundance", names(.), ignore.case = TRUE)] %>% flatten_df #%>%
-    # dplyr::mutate(sp_codes = fuzzySim::spCodes(species, nchar.gen = 2, nchar.sp = 2))
-  
-  spp_length.mass = community_objects %>% flatten %>% .[grepl("lengths", names(.), ignore.case = TRUE)] %>% flatten_df %>%
-    # convert columns to numeric where appropriate
-    dplyr::mutate(across(matches(')'), as.numeric))
-  
-  
-  
-  spp_length.mass %>%
-   dplyr::filter(Species == "Anchoa mitchilli") #%>%
-    ggplot(aes(x = 'TL (mm)'))+
-    geom_density() +
-    theme_minimal()
   
 
   

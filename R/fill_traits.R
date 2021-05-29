@@ -8,15 +8,23 @@ fill_traits <- function(spp_taxonomy_list =
                         readRDS(file_in("./data/derived-data/spp_taxonomy_list.rds"))) {
 
   
-  spp_taxonomy = spp_taxonomy_list %>% map(~.x %>% dplyr::filter(rank %in% c("Species")) %>% select(name)) %>% unlist
-  gen_taxonomy = spp_taxonomy_list %>% map(~.x %>% dplyr::filter(rank %in% c("Genus")) %>% select(name)) %>% unlist %>% unique
+  spp_taxonomy = spp_taxonomy_list %>% map(~.x %>% dplyr::filter(rank %in% c("species")) %>% select(name)) %>% unlist
+  gen_taxonomy = spp_taxonomy_list %>% map(~.x %>% dplyr::filter(rank %in% c("genus")) %>% select(name)) %>% unlist %>% unique
 
   taxa_update = readRDS(file_in("./data/derived-data/taxa_update.rds"))
   
   if((Sys.Date() - taxa_update) > 100){
     #validate names
   fish_valid_taxonomy = rfishbase::validate_names(spp_taxonomy, server = 'fishbase') 
+  fish_valid_common = rfishbase::sci_to_common(fish_valid_taxonomy, server = 'fishbase') %>%
+    dplyr::filter(Language == 'English') %>%
+    dplyr::mutate(server = 'rfishbase')
   sealife_valid_taxonomy = rfishbase::validate_names(spp_taxonomy, server = 'sealifebase') 
+  sealife_valid_common = rfishbase::sci_to_common(sealife_valid_taxonomy, server = 'sealifebase') %>%
+    dplyr::filter(Language == "English") %>%
+    dplyr::mutate(server = 'sealifebase')
+  taxonomy_valid_common = bind_rows(fish_valid_common, sealife_valid_common)
+  saveRDS(taxonomy_valid_common, "./data/derived-data/taxonomy/taxonomy_valid_common.rds")
   # get metadata of valid names
   fish_valid_meta = rfishbase::species(fish_valid_taxonomy, server = 'fishbase') %>% 
     dplyr::mutate(server = 'rfishbase')
@@ -41,9 +49,5 @@ fill_traits <- function(spp_taxonomy_list =
   
   # save date code to run in future only ~100 days
   saveRDS(Sys.Date(), "./data/derived-data/taxa_update.rds")
-  }
-  taxonomy_valid_meta
-  # common_valid_taxonomy = rfishbase::sci_to_common(spp_valid_taxonomy)
-  
-  
+  } else{ Print("traits up to date.")}
 }

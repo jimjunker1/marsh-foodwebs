@@ -3,6 +3,7 @@
 ##' .. content for \details{} ..
 ##'
 ##' @title
+##' @param = data_files
 
 import_data <- function(data_files) {
   rm(data_files)

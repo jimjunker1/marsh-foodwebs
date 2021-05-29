@@ -6,11 +6,11 @@
 
 rename_fatty_acids <- function() {
 
-  alt_names = list(c(),
-                   c())
+  FA_data_list= data_list[grepl("(FA).*", unlist(names(data_list)), ignore.case = TRUE)] %>%
+    flatten 
   
-  good_names = list()
-  
+  FA_information = FA_data_list[grepl('.*(Information|concentrations).*', names(FA_data_list), ignore.case = TRUE)] 
+    
   
 
 }

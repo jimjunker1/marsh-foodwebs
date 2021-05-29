@@ -9,47 +9,29 @@ fill_taxonomy <- function(spp_list = foodweb_data[["spp_list"]]) {
 
   '%ni%' = Negate('%in%')
   #!++++   End Helper functions    ++++!
+  spp_list = gsub(" sp.","", spp_list)
   spp_taxonomy_list = readRDS(file = "./data/derived-data/spp_taxonomy_list.rds")
   na_list = readRDS(file = "./data/derived-data/bad_names.rds")
+  full_names = c(names(spp_taxonomy_list),na_list) %>% gsub(" sp.","",.)
   
-  new_spp_names = spp_list[spp_list %ni% names(spp_taxonomy_list) & spp_list %ni% na_list]
+  if(!all(spp_list %in% full_names)){
+    new_spp = spp_list[spp_list %ni% full_names]
+    new_class_search = taxize::classification(new_spp, db = "itis")
+    new_class = new_class_search[!is.na(new_class_search)]
+    new_full_tax = c(spp_taxonomy_list, new_class) %>% map(as_tibble)
+    saveRDS(new_full_tax, file = "./data/derived-data/spp_taxonomy_list.rds")
+    new_nas = new_class_search[is.na(new_class_search)]
+    new_na_list = c(na_list, names(new_nas))
+    saveRDS(new_na_list, file = "./data/derived-data/bad_names.rds")
+  } else{ print("Species up to date.")}
   
-  new_spp_search = taxize::classification(new_spp_names, db = 'itis')
+  spp_taxonomy_df = spp_taxonomy_list %>%
+    map(~.x %>% dplyr::select(name, rank) %>%
+          pivot_wider(names_from = 'rank', values_from = 'name', values_fn = list)) %>%
+    bind_rows(.id = 'species_name') %>%
+    dplyr::select(species_name, kingdom, phylum, class, order, family, tribe, genus, species) %>%
+    dplyr::mutate(across(everything(),~na_if(.x, "NULL"))) %>%
+    unnest(everything()) %>% as_tibble
   
-  nas = new_spp_search[is.na(new_spp_search)]
-  short_tax = 
-  new_spp = new_spp_list[!is.na(new_spp_list)]
-  
-  spp_taxonomy_list = rlist::list.merge()
-  if(file.exist(path = "./data/derived-data/spp_taxonomy_list.rds") && length(new_spp_files) == 0){
-    cat("Species list up to date. The list of groups with NAs are:",na_list)
-  } else{
-    
-    full_spp_list = readRDS(file = "./data/derived-data/full_spp_list.rds")
-    full_spp_list = full_spp_list[!is.na(full_spp_list)]
-    full_names = names(full_spp_list)
-  
-    short_spp_file_list = list.files(path = "./data/raw-data/", pattern = "*spp_list.rds", full.names = TRUE)
-    short_spp_files= lapply(short_spp_file_list, readRDS)
-    short_nas = short_spp_files %>% map(~.x %>% .[is.na(.)]) %>% .[lapply(.,length) >0] %>% flatten
-    short_spp_files = short_spp_files %>% map(~.x %>% .[!is.na(.)]) %>% flatten
-    new_names = trimws(names(short_spp_files))
-  
-    new_spp = short_spp_files[new_names %ni% full_names]
-    new_full_spp_list = rlist::list.merge(full_spp_list, new_spp)
-  
-    nas = short_nas[trimws(names(short_nas)) %ni% names(new_full_spp_list)]
-  
-    nas = nas[trimws(names(nas)) %ni% na_list]
-    
-  if(length(nas) >0){
-    na_search = taxize::classification(trimws(names(nas)), db = "itis")
-    new_nas = na_search[is.na(na_search)]
-    filled_nas = na_search[!is.na(na_search)]
-    new_full_spp_list = rlist::list.merge(new_full_spp_list, filled_nas)
-    nas = c(na_list, names(new_nas))
-  }
- saveRDS(new_full_spp_list, "./data/derived-data/spp_taxonomy_list.rds")
- saveRDS(names(nas), "./data/derived-data/bad_names.rds")
-  }
+  return(list(spp_taxonomy_df = spp_taxonomy_df))
 }
