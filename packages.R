@@ -32,7 +32,7 @@ if(!all(grepl(".*_df_traits|.*_dt_metadata.csv|.*_df_merged_metadata_traits.csv"
   message("TOFF database updated.")
   TOFF_import()
   
-}
+} else{print("TOFF database is up to date.")}
 
 read_excel_allsheets <- function(filename, tibble = TRUE) {
   if(grepl(".csv", filename)){

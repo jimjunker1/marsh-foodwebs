@@ -3,7 +3,7 @@ the_plan <-
 
   data_list = readRDS(file_in("./data/raw-data/data_lists.rds")),
   
-  fatty_acid_names = rename_fatty_acids(),
+  # fatty_acid_names = rename_fatty_acids(),
   
   ### Building metaweb structure and metadata ###
   
@@ -11,13 +11,13 @@ the_plan <-
   # 
   taxonomy_df = fill_taxonomy(foodweb_data[['spp_list']]),
   # 
-  trait_df = fill_traits(readRDS(file_in("./data/derived-data/spp_taxonomy_list.rds"))),
+  # trait_df = fill_traits(readRDS(file_in("./data/derived-data/spp_taxonomy_list.rds"))),
   #  
-  metaweb = create_metaweb(foodweb_data[["spp_nodes"]], foodweb_data[['agg_matrix']], readRDS(file_in("./data/derived-data/foodwebs/GoMexSI_df.rds"))),
+  # metaweb = create_metaweb(foodweb_data[["spp_nodes"]], foodweb_data[['agg_matrix']], readRDS(file_in("./data/derived-data/foodwebs/GoMexSI_df.rds"))),
   # #
   # ### Working with site-specific data  ###
   # 
-  saltmarsh_data = clean_marsh_data(data_list, trait_df, metaweb[['interaction_list']]),
+  # saltmarsh_data = clean_marsh_data(data_list, taxonomy_df),#, trait_df, metaweb[['interaction_list']]),
   # 
   # pondweb = clean_pond_data(saltmarsh_data, taxonomy_df),
   # 

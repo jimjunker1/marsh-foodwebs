@@ -67,5 +67,5 @@ create_metaweb <- function(spp_nodes = foodweb_data[["spp_nodes"]],
   
   full_matrix = full_matrix[rownames(full_matrix) %in% names(trophic_sort), colnames(full_matrix) %in% names(trophic_sort)]
   
-  return(list(interaction_list = full_matrix = full_matrix))
+  return(list(interaction_list = full_matrix))
 }
