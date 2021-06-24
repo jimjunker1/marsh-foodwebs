@@ -1,7 +1,6 @@
 the_plan <-
   drake_plan(
 
-  data_list = readRDS(file_in("./data/raw-data/data_lists.rds")),
   
   # fatty_acid_names = rename_fatty_acids(),
   

@@ -7,7 +7,8 @@
 ##' @param taxonomy_df
 ##' @param trait_df
 ##' @param interaction_list
-clean_marsh_data <- function(data_list, taxonomy_df
+# clean_marsh_data <- function(data_list, taxonomy_df
+source()
                              # , trait_df, interaction_list = metaweb[['interaction_list']]
                              ) {
 
@@ -32,6 +33,9 @@ clean_marsh_data <- function(data_list, taxonomy_df
   
   
   #### COMPOSITION DATA ####
+  spp_taxonomy_df = readRDS(file = "./data/derived-data/spp_taxonomy_df.rds")
+  taxonomyLM = readRDS(file = "./data/derived-data/taxonomy/taxonomyLM.rds")
+  taxonomyLL = readRDS(file = "./data/derived-data/taxonomy/taxonomyLL.rds")
   
   community_objects = data_list[grepl("comp.*|abun.*",unlist(names(data_list)), ignore.case = TRUE)]
   
@@ -175,8 +179,44 @@ spp_length.mass = community_objects %>% flatten %>% .[grepl("lengths", names(.),
   }
   
   
-  spp_length_abundance = merge_length_n(n_df = spp_abundance, len_df = spp_length.mass)
+  
     
+  
+  convert_LM = function(species_df = NULL, LM_df = NULL, LL_df= NULL,...){
+    species_list = species_df %>%
+      junkR::named_group_split(species)
+    
+    LM_filter = function(x, LL_df){
+      if("TL" %in% unique(x$Type)){
+        y = x %>% dplyr::filter(Type == "TL")
+      } else{
+        y = x %>% dplyr::left_join(LL_df %>%
+                                 dplyr::filter(Species == unique(x$Species) &
+                                                 Length1 %in% unique(x$Type) &
+                                                 Length2 == "TL") %>%
+                                 dplyr::select(SpecCode, Species, Length1, Length2, a,b)) #%>%
+          #dplyr::mutate()
+      }
+      y 
+    }
+    debugonce(LM_filter)
+    LM_list = LM_df %>% 
+      junkR::named_group_split(Species) %>%
+      map(~.x %>% dplyr::select(SpecCode, Species, Type, a:UCLb) %>%
+            LM_filter(.,LL_df = LL_df))
+    
+  }
+  
+  spp_length_abundance = merge_length_n(n_df = spp_abundance, len_df = spp_length.mass) %>%
+    dplyr::select(-n, - length_n) %>%
+    unnest(tl_mm) 
+  
+  debugonce(convert_LM)
+  spp_length_abundance %>%
+    convert_LM(., LM_df = taxonomyLM, LL_df = taxonomyLL) -> y
+    
+    left_join(taxonomyLM %>% select(species = "Species", Type, a:UCLb))
+  
   
   pond_abundance = spp_abundance %>%
     dplyr::filter(grepl("pond", Location) & !grepl('na',`common name`)) %>%

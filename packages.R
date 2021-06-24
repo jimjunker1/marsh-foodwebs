@@ -50,3 +50,5 @@ read_excel_allsheets <- function(filename, tibble = TRUE) {
   x
 }
 
+data_list <<- readRDS("./data/raw-data/data_lists.rds")
+
